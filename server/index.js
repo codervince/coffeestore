@@ -1,11 +1,13 @@
 // mount server
 
 const express = require("express");
-
+const cors = require('cors');
 const app = express();
 
 import serverRender from './render';
+import apiRouter from './apiRouter';
 
+app.use(cors());
 
 //MW for serving static content
 app.use(express.static('client'));
@@ -16,6 +18,8 @@ app.get('/', (req, res) => {
     content: serverRender()
   });
 });
+
+app.use('/api', apiRouter);
 
 //for dynamic html need pug, ejs, handlebars templating language
 

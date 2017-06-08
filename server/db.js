@@ -11,13 +11,8 @@ var pool = new pg.Pool({
   password: 'I17nvader' //ENV var PGPASSWORD
 });
 
-// connect to our database
-pool.connect(function (err, client, done) {
 
-    if (err) throw err;
-
-    // execute a query on our database
-    client.query('SELECT * from coffees', [], function (err, result) {
+pool.query('SELECT * from coffees', [], function (err, result) {
 
       if (err) throw err;
     // just print the result to the console
@@ -28,4 +23,3 @@ pool.connect(function (err, client, done) {
     //     if (err) throw err;
     // });
   });
-});
