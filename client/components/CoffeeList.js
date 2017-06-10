@@ -10,6 +10,7 @@ const CoffeeList = (props) => {
         {props.coffees.map(coffee =>
           <Coffee key={coffee.id}
           {...coffee}
+          rating={props.calcRatingForBook(book.id)}
           onClick={props.onBookClick}
           />
         )}

@@ -29,7 +29,7 @@ class App extends React.Component {
   fetchRatingForBook = (bookId) => {
     //efore going to API check if rating already in state
     if(this.state.ratings[bookId]) {return;}
-    
+
     axios.get(`http://localhost:8080/api/coffees/${bookId}/ratings`)
       .then(res=> {
         //returns previous state NEED THIS TO PREVENT RACE CONDITIONS
@@ -43,11 +43,20 @@ class App extends React.Component {
 
     console.log(bookId);
   }
+
+  calcRatingForBook = (bookId)=> {
+    const ratings = this.state.ratings[bookId];
+    if(!ratings || ratings.length===0) {return;} //no data
+    return  ratings.reduce((acc, review)=> {
+      return acc+ review.rating;
+    },0) / ratings.length;
+  }
   //app component telling list component to use some data
   render() {
     // debugger
     return (
       <CoffeeList coffees={this.state.coffees}
+      calcRatingForBook={this.calcRatingForBook}
       onBookClick={this.fetchRatingForBook}/>
     );
   }
