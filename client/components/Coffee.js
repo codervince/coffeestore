@@ -2,7 +2,13 @@ const React = require('react');
 
 const Coffee = (props) => {
   return (
-    <div > One Coffee </div>
+    <div >
+    <div> {props.title} </div>
+    <div> {props.description} </div>
+    <div> {props.price} </div>
+    <div> {props.producer} </div>
+    </div>
+
   );
 
 };

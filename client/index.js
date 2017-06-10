@@ -1,10 +1,8 @@
 import App from './components/App';
+import axios from 'axios';
 
-
-// react app
 ReactDOM.render(
-  // React.createElement("h2", null, "Hello react"),
-  <App />,
-  // <h2> Hello React with JSX! </h2>,
+  <App initialData={window.__initialData__} />,
+
   document.getElementById("root")
-)
+);
