@@ -16,7 +16,7 @@ const pool = new pg.Pool({
   database: 'd92m039fkfvb02',
   user: 'npgdgpsnmawanl', //ENV var PGUSER,
   host: 'ec2-107-20-226-93.compute-1.amazonaws.com',
-  password: '52434dcc41da873ee69a97cdca433c71719bce23c583d85c82b3f5ebd2cbc794', 
+  password: '52434dcc41da873ee69a97cdca433c71719bce23c583d85c82b3f5ebd2cbc794',
   ssl:true
 });
 

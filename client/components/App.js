@@ -14,21 +14,41 @@ import axios from 'axios'; //can also use fetch?
 
 //better syntax
 class App extends React.Component {
-  state = {coffees: this.props.initialData };
+  state = {
+    coffees: this.props.initialData,
+    ratings: {}
+   };
 
-  componentDidMount() {
-    // axios.get('http://localhost:8080/api/coffees')
-    //   .then(res => {
-    //     this.setState({coffees: res.data});
-    //     console.log(res.data);
-    //   })
+  // componentDidMount() {
+  //   // axios.get('http://localhost:8080/api/coffees')
+  //   //   .then(res => {
+  //   //     this.setState({coffees: res.data});
+  //   //     console.log(res.data);
+  //   //   })
+  // }
+  fetchRatingForBook = (bookId) => {
+    //efore going to API check if rating already in state
+    if(this.state.ratings[bookId]) {return;}
+    
+    axios.get(`http://localhost:8080/api/coffees/${bookId}/ratings`)
+      .then(res=> {
+        //returns previous state NEED THIS TO PREVENT RACE CONDITIONS
+        this.setState((prevState) => {
+          const currentRatings = prevState.ratings;
+          currentRatings[bookId] = res.data;
+          return {ratings: currentRatings};
+        })
+        console.log(res.data);
+      })
+
+    console.log(bookId);
   }
-
   //app component telling list component to use some data
   render() {
     // debugger
     return (
-      <CoffeeList coffees={this.state.coffees} />
+      <CoffeeList coffees={this.state.coffees}
+      onBookClick={this.fetchRatingForBook}/>
     );
   }
 }
