@@ -1,7 +1,7 @@
 const React = require('react');
 
 import CoffeeList from './CoffeeList';
-
+import Coffee from './Coffee';
 //ajax library
 import axios from 'axios'; //can also use fetch?
 
@@ -14,9 +14,11 @@ import axios from 'axios'; //can also use fetch?
 
 //better syntax
 class App extends React.Component {
+  //MINIMIZE WHAT PUT ON STATE
   state = {
     coffees: this.props.initialData,
-    ratings: {}
+    ratings: {},
+    currentCoffeeId: null,
    };
 
   // componentDidMount() {
@@ -26,26 +28,38 @@ class App extends React.Component {
   //   //     console.log(res.data);
   //   //   })
   // }
-  fetchRatingForBook = (bookId) => {
+  fetchRatingForBook = (coffeeId) => {
     //efore going to API check if rating already in state
-    if(this.state.ratings[bookId]) {return;}
+    if(this.state.ratings[coffeeId]) {return;}
 
-    axios.get(`http://localhost:8080/api/coffees/${bookId}/ratings`)
+    axios.get(`http://localhost:8080/api/coffees/${coffeeId}/ratings`)
       .then(res=> {
         //returns previous state NEED THIS TO PREVENT RACE CONDITIONS
         this.setState((prevState) => {
           const currentRatings = prevState.ratings;
-          currentRatings[bookId] = res.data;
+          currentRatings[coffeeId] = res.data;
           return {ratings: currentRatings};
         })
-        console.log(res.data);
+        // console.log(res.data);
       })
 
-    console.log(bookId);
+    // console.log(coffeeId);
+  }
+  //
+  showCoffeePage = (coffeeId) => {
+    //before show single coffee push page to history
+    history.pushState(
+      {currentCoffeeId: coffeeId},
+      "",
+      `books/${coffeeId}`
+    );
+    //replace list with single coffee
+    this.setState({currentCoffeeId:coffeeId});
+
   }
 
-  calcRatingForBook = (bookId)=> {
-    const ratings = this.state.ratings[bookId];
+  calcRatingForBook = (coffeeId)=> {
+    const ratings = this.state.ratings[coffeeId];
     if(!ratings || ratings.length===0) {return;} //no data
     return  ratings.reduce((acc, review)=> {
       return acc+ review.rating;
@@ -53,11 +67,22 @@ class App extends React.Component {
   }
   //app component telling list component to use some data
   render() {
-    // debugger
+    // return a single coffee or a coffelist depending on if
+    // state set via click
     return (
-      <CoffeeList coffees={this.state.coffees}
-      calcRatingForBook={this.calcRatingForBook}
-      onBookClick={this.fetchRatingForBook}/>
+      <div>
+      {
+        this.state.currentCoffeeId ?
+        //need this coz array
+          <Coffee { ...this.state.coffees.find(item => item.id === this.state.currentCoffeeId)}/> :
+          // <Coffee { ...this.state.coffees[this.state.currentCoffeeId]}/> :
+          <CoffeeList
+          onTitleClick={this.showCoffeePage}
+          coffees={this.state.coffees}
+          calcRatingForBook={this.calcRatingForBook}
+          onBookClick={this.fetchRatingForBook}/>
+      }
+      </div>
     );
   }
 }

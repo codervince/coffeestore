@@ -1,17 +1,15 @@
 const React = require('react');
-import Coffee from './Coffee';
+import CoffeeItem from './CoffeeItem';
 
 const CoffeeList = (props) => {
-    //every element should return a single component
-    //props.onBookClick()
-    console.log(props.coffees);
     return (
       <div>
         {props.coffees.map(coffee =>
-          <Coffee key={coffee.id}
+          <CoffeeItem key={coffee.id}
+          onClick= {props.onTitleClick}
+          rating={props.calcRatingForBook(coffee.id)}
+          onRatingClick={props.onBookClick}
           {...coffee}
-          rating={props.calcRatingForBook(book.id)}
-          onClick={props.onBookClick}
           />
         )}
       </div>

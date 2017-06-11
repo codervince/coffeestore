@@ -13,8 +13,9 @@ app.use(cors());
 app.use(express.static('client'));
 app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-  serverRender().then(renderData =>
+app.get(['/', 'coffees/:coffeeId'], (req, res) => {
+  // res.render('index', {markup: '', initialData: ''});
+  serverRender(req.params.coffeeId).then(renderData =>
     res.render('index', {
       markup: renderData.markup,
       initialData: renderData.data
